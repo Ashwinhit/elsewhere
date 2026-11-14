@@ -1,0 +1,231 @@
+<!--
+  Elsewhere · Apogeans: The Limit Breakers · NASA Space Apps Challenge 2026
+
+  AI ASSISTANCE NOTICE
+  AI (Anthropic's Claude) helped us analyze the immense amount of data behind this
+  app: elevation, climate, geology and surface datasets for Earth, the Moon and
+  Mars, and turning it into the 16 feature scores and similarity matches the app
+  uses. AI also helped write and debug parts of this code. See README.md.
+-->
+<div id="splash" aria-hidden="true"><div class="sp-in"><svg viewBox="0 0 120 120" width="88" height="88"><circle cx="60" cy="60" r="56" fill="#0D1116" stroke="#1F2730"/><ellipse class="sp-orbit" cx="60" cy="60" rx="44" ry="17" fill="none" stroke="#D8B47A" stroke-width="2"/><circle cx="51" cy="50" r="17" fill="#C9CED6"/><circle cx="57" cy="47" r="14" fill="#0D1116"/><circle class="sp-mars" cx="86" cy="70" r="7" fill="#E2713F"/></svg><div class="sp-word">ELSE<b>WHERE</b></div><div class="sp-kick">APOGEANS · THE LIMIT BREAKERS</div></div></div>
+
+<header class="topbar" id="topbar">
+  <button type="button" class="iconbtn" id="tbBack" aria-label="Back" hidden><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <div class="tb-brand" id="tbBrand">ELSE<b>WHERE</b></div>
+  <div class="tb-title" id="tbTitle"></div>
+  <button type="button" class="iconbtn" id="tbPresent" data-present="1" aria-label="Present the app"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="M10.3 8.3v4.4l3.8-2.2z" fill="currentColor"/><path d="M9 20h6M12 16.5V20"/></svg></button>
+  <button type="button" class="iconbtn" id="tbInfo" data-go="more" aria-label="More tools"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg></button>
+  <button type="button" class="iconbtn" id="tbShare" aria-label="Share this result" hidden><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.8l7.4-4.3M8.3 13.2l7.4 4.3"/></svg></button>
+</header>
+
+<main class="pages" id="pages">
+
+  <!-- HOME -->
+  <section class="page" id="pg-home" aria-label="Home">
+    <canvas id="stars" aria-hidden="true" hidden></canvas>
+    <div class="m3-hello"><small>Apogeans · The Limit Breakers</small><h1>Where on Earth<br>is the <em>Moon</em>?</h1></div>
+    <button type="button" class="m3-search" data-go="earth" data-focus="1"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><span>Search 193 countries</span></button>
+    <div class="m3-actions">
+      <button type="button" class="m3-act" data-go="check"><span class="m3-ai" style="--c:#FFE3A8"><svg viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg></span><span>Check place</span></button>
+      <button type="button" class="m3-act" data-go="photo"><span class="m3-ai" style="--c:#E2713F"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.6"/></svg></span><span>Photo match</span></button>
+      <button type="button" class="m3-act" data-go="near"><span class="m3-ai" style="--c:#7FC79A"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7.5"/></svg></span><span>Near me</span></button>
+      <button type="button" class="m3-act" data-go="clock"><span class="m3-ai" style="--c:#B99CF0"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg></span><span>Space clock</span></button>
+    </div>
+    <button type="button" class="m3-present" data-present="1"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span><b>Present Elsewhere</b><small>A 90-second guided tour of the app</small></span></button>
+    <div class="m3-sect"><h3>For you</h3></div>
+    <div class="m3-carousel">
+      <button type="button" class="nowcard" id="nowCard"></button>
+      <button type="button" class="filmcard" data-go="films"><img src="film_problem.jpg" alt=""><span><b>Watch the films</b><small>The problem, and the full story</small></span></button>
+      <button type="button" class="aotd" id="aotd" hidden></button>
+    </div>
+    <div class="m3-sect"><h3>Strongest matches worldwide</h3></div>
+    <div class="hscroll" id="topWorld"></div>
+    <div class="m3-sect"><h3>Tools</h3><button type="button" class="m3-more" data-go="more">See all</button></div>
+    <div class="m3-list">
+      <button type="button" class="m3-row" data-go="compare"><span class="m3-ri" style="--c:#7FB2D8"><svg viewBox="0 0 24 24"><path d="M12 4v16M7 20h10M5 7h14M5 7l-2.5 6a2.5 2.5 0 0 0 5 0zM19 7l-2.5 6a2.5 2.5 0 0 0 5 0z"/></svg></span><span class="m3-rt"><b>Compare two sites</b><small>Side by side, 16 features</small></span><svg class="chev" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+      <button type="button" class="m3-row" data-go="weight"><span class="m3-ri" style="--c:#7FC79A"><svg viewBox="0 0 24 24"><path d="M6 20h12l-2-11H8zM9.5 9a2.5 2.5 0 1 1 5 0"/></svg></span><span class="m3-rt"><b>Your weight out there</b><small>On the Moon and Mars</small></span><svg class="chev" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+      <button type="button" class="m3-row" data-go="timeline"><span class="m3-ri" style="--c:#E2713F"><svg viewBox="0 0 24 24"><path d="M12 3c3 2 4.5 5.5 4 10l-2 3h-4l-2-3c-.5-4.5 1-8 4-10z"/><circle cx="12" cy="9.5" r="1.6"/></svg></span><span class="m3-rt"><b>Moon & Mars landings</b><small>19 landings, and their Earth twins</small></span><svg class="chev" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+      <button type="button" class="m3-row" data-go="saved"><span class="m3-ri" style="--c:#FFC93C"><svg viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg></span><span class="m3-rt"><b>Saved sites</b><small>Your list</small></span><svg class="chev" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+      <button type="button" class="m3-row" data-go="badges"><span class="m3-ri" style="--c:#FFC93C"><svg viewBox="0 0 24 24"><circle cx="12" cy="15" r="5"/><path d="M8.6 11.4 6 3h4l2 5 2-5h4l-2.6 8.4"/></svg></span><span class="m3-rt"><b>Badges</b><small>Your achievements</small></span><svg class="chev" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+    <div class="card factcard" id="factCard"></div>
+    <div class="sect" id="homeNewsWrap" hidden>
+      <div class="m3-sect"><h3>Moon &amp; Mars news</h3><button type="button" class="m3-more" data-go="news">See all</button></div>
+      <div class="card hn" id="homeNews"></div>
+    </div>
+    <div class="m3-sect"><h3>Where we compare against</h3></div>
+    <div class="hscroll" id="destList"></div>
+  </section>
+
+  <!-- EARTH -->
+  <section class="page" id="pg-earth" aria-label="Earth analogs">
+    {{SEARCH}}
+    <button type="button" class="checklink" data-go="check"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span><b>Check any place</b><small>Your location, coordinates or a map link</small></span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></button>
+    <div class="pickbar" id="pickbar" hidden><span>Tap any spot on the map to check it</span><button type="button" id="pickCancel">Cancel</button></div>
+    {{MAPCARD}}
+    {{LEGEND}}
+  </section>
+
+  <!-- SITE -->
+  <section class="page" id="pg-site" aria-label="Site details">
+    {{DOSSIER}}
+  </section>
+
+  <!-- CHECK -->
+  <section class="page" id="pg-check" aria-label="Check a place">
+    <div class="pagehead"><div class="eyebrow">ANY POINT ON EARTH</div><h2>Check a place</h2><p class="note">Find out which Moon or Mars site any spot on Earth is most like.</p></div>
+    {{CHECKER}}
+    <button type="button" class="checklink" data-go="photo"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.6"/></svg><span><b>Rate a photo instead</b><small>See how Moon- or Mars-like a picture looks</small></span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></button>
+    <div class="card tips">
+      <h3>WHAT YOU CAN PASTE</h3>
+      <ul>
+        <li><code>23.59, 58.38</code> decimal coordinates</li>
+        <li><code>23°35′N 58°23′E</code> degrees</li>
+        <li>A full Google Maps or OpenStreetMap link</li>
+      </ul>
+    </div>
+    <div class="sect" id="recentWrap" hidden>
+      <div class="sect-h"><h3>YOUR RECENT CHECKS</h3></div>
+      <div class="rlist" id="recent"></div>
+    </div>
+  </section>
+
+  <!-- EXPLORE -->
+  <section class="page" id="pg-explore" aria-label="Explore the Moon and Mars">
+    {{EXPLORE}}
+  </section>
+
+  <!-- PHOTO MATCH -->
+  <section class="page" id="pg-photo" aria-label="Photo match">
+    <div class="pagehead"><div class="eyebrow">PHOTO MATCH</div><h2>How Moon-like is your photo?</h2><p class="note">Pick a landscape photo: a desert, a beach, rocks, a mountain. Elsewhere looks at its ground colour, plants, sky and texture, and scores it against the Moon and Mars.</p></div>
+    <div class="ph-btns">
+      <button type="button" class="ph-drop ph-cam" id="camOpen"><span class="pc-ic big"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.6"/></svg></span><b>Live camera</b><small>Point at a landscape and see the score live</small></button>
+      <label class="ph-drop" for="phIn"><span class="pc-ic big"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M5 17l4.5-4.5 3 3 2.5-2.5 4 4"/></svg></span><b>Choose a photo</b><small>From your gallery</small></label>
+    </div>
+    <input type="file" id="phIn" accept="image/*" hidden>
+    <input type="file" id="phCap" accept="image/*" capture="environment" hidden>
+    <div id="phResult"></div>
+    <div class="sect" id="phHistWrap" hidden><div class="sect-h"><h3>YOUR RATED PHOTOS</h3></div><div class="pm-grid" id="phHist"></div></div>
+    <p class="nw-credit">A visual estimate from colour, plants, sky and texture: fun, not a geology test. Your photos stay on your device.</p>
+  </section>
+
+  <!-- TRIVIA -->
+  <section class="page" id="pg-trivia" aria-label="Space trivia"><div id="trivia" class="trivia"></div></section>
+
+  <!-- NEWS -->
+  <section class="page" id="pg-news" aria-label="Space news"><div id="news" class="news"></div></section>
+
+  <!-- MORE -->
+  <section class="page" id="pg-more" aria-label="More tools">
+    <div class="pagehead"><div class="eyebrow">MORE</div><h2>Tools &amp; extras</h2></div>
+    <div class="mgrid">
+      <button type="button" class="mtile" data-go="films"><span class="mt-ic" style="--c:#FFC93C"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M10 9.3v5.4l4.6-2.7z"/></svg></span><b>Films</b><small>Two short cinematic films</small></button>
+      <button type="button" class="mtile" data-go="photo"><span class="mt-ic" style="--c:#E2713F"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.6"/></svg></span><b>Photo match</b><small>Rate a photo for Moon and Mars</small></button>
+      <button type="button" class="mtile" data-go="near"><span class="mt-ic" style="--c:#FFE3A8"><svg viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg></span><b>Near me</b><small>Strong analogs closest to you</small></button>
+      <button type="button" class="mtile" data-go="compare"><span class="mt-ic" style="--c:#7FB2D8"><svg viewBox="0 0 24 24"><path d="M12 4v16M7 20h10M5 7h14M5 7l-2.5 6a2.5 2.5 0 0 0 5 0zM19 7l-2.5 6a2.5 2.5 0 0 0 5 0z"/></svg></span><b>Compare</b><small>Two sites, 16 features</small></button>
+      <button type="button" class="mtile" data-go="saved"><span class="mt-ic" style="--c:#FFC93C"><svg viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg></span><b>Saved sites</b><small  id="moreSaved"></small></button>
+      <button type="button" class="mtile" data-go="clock"><span class="mt-ic" style="--c:#B99CF0"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg></span><b>Space clock</b><small>Moon phase, Mars time, signal delay</small></button>
+      <button type="button" class="mtile" data-go="weight"><span class="mt-ic" style="--c:#7FC79A"><svg viewBox="0 0 24 24"><path d="M6 20h12l-2-11H8zM9.5 9a2.5 2.5 0 1 1 5 0"/></svg></span><b>Your weight</b><small>On the Moon and Mars</small></button>
+      <button type="button" class="mtile" data-go="timeline"><span class="mt-ic" style="--c:#E2713F"><svg viewBox="0 0 24 24"><path d="M12 3c3 2 4.5 5.5 4 10l-2 3h-4l-2-3c-.5-4.5 1-8 4-10z"/><circle cx="12" cy="9.5" r="1.6"/><path d="M8.3 14.5 5.5 17l1 3 3-2M15.7 14.5l2.8 2.5-1 3-3-2"/></svg></span><b>Landings</b><small>Moon and Mars landings since 1966</small></button>
+      <button type="button" class="mtile" data-go="glossary"><span class="mt-ic" style="--c:#C9CED6"><svg viewBox="0 0 24 24"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v14H6.5A1.5 1.5 0 0 0 5 18.5zM5 18.5A1.5 1.5 0 0 0 6.5 20H19"/></svg></span><b>Glossary</b><small>Space words, simply explained</small></button>
+      <button type="button" class="mtile" data-go="badges"><span class="mt-ic" style="--c:#FFC93C"><svg viewBox="0 0 24 24"><circle cx="12" cy="15" r="5"/><path d="M8.6 11.4 6 3h4l2 5 2-5h4l-2.6 8.4"/></svg></span><b>Badges</b><small  id="moreBadges"></small></button>
+      <button type="button" class="mtile" data-go="about"><span class="mt-ic" style="--c:#7FB2D8"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.6v.1"/></svg></span><b>About</b><small>How Elsewhere works</small></button>
+    </div>
+  </section>
+
+  <section class="page" id="pg-films" aria-label="Films">
+    <div class="pagehead"><div class="eyebrow">FILMS</div><h2>Elsewhere on screen</h2><p class="note">AI-generated animations. Tap play; turn the sound up.</p></div>
+    <figure class="film"><video controls playsinline preload="none" poster="film_problem.jpg" src="film_problem.mp4"></video><figcaption><b>The problem</b><small>45 s · Why training on the right ground matters</small></figcaption></figure>
+    <figure class="film"><video controls playsinline preload="none" poster="film_main.jpg" src="film_main.mp4"></video><figcaption><b>The full story</b><small>67 s · Problem, solution and what Elsewhere does</small></figcaption></figure>
+  </section>
+
+  <section class="page" id="pg-saved" aria-label="Saved sites">
+    <div class="pagehead"><div class="eyebrow">YOUR LIST</div><h2>Saved sites</h2></div>
+    <div class="rlist" id="savedList"></div>
+  </section>
+
+  <section class="page" id="pg-near" aria-label="Near me">
+    <div class="pagehead"><div class="eyebrow">NEAR ME</div><h2>Analogs near you</h2><p class="note">The closest places that score 45% or more against the Moon or Mars.</p></div>
+    <button type="button" class="tv-go" id="nearGo">📍 Use my location</button>
+    <div class="rlist" id="nearOut"></div>
+  </section>
+
+  <section class="page" id="pg-compare" aria-label="Compare sites">
+    <div class="pagehead"><div class="eyebrow">COMPARE</div><h2>Compare two sites</h2></div>
+    <datalist id="cmpList"></datalist>
+    <div class="cp-pick"><input id="cmpA" list="cmpList" aria-label="First site"><button type="button" class="iconbtn" id="cmpSwap" aria-label="Swap">⇅</button><input id="cmpB" list="cmpList" aria-label="Second site"></div>
+    <div class="card pad" id="cmpOut"></div>
+  </section>
+
+  <section class="page" id="pg-clock" aria-label="Space clock">
+    <div class="pagehead"><div class="eyebrow">LIVE</div><h2>Space clock</h2></div>
+    <div id="clockOut" style="display:flex;flex-direction:column;gap:12px"></div>
+  </section>
+
+  <section class="page" id="pg-weight" aria-label="Your weight on the Moon and Mars">
+    <div class="pagehead"><div class="eyebrow">GRAVITY</div><h2>You on the Moon and Mars</h2></div>
+    <div class="wt-in"><label>Your mass <span><input id="wtKg" type="number" inputmode="decimal" value="60" min="1" max="300"> kg</span></label><label>Your jump <span><input id="wtJump" type="number" inputmode="decimal" value="40" min="1" max="200"> cm</span></label></div>
+    <div class="wt-grid" id="wtOut"></div>
+  </section>
+
+  <section class="page" id="pg-timeline" aria-label="Landings">
+    <div class="pagehead"><div class="eyebrow">HISTORY</div><h2>Moon &amp; Mars landings</h2><p class="note">Tap "Find this place on Earth" to jump to the closest Earth analog.</p></div>
+    <div class="tl" id="tlOut"></div>
+  </section>
+
+  <section class="page" id="pg-glossary" aria-label="Glossary">
+    <div class="pagehead"><div class="eyebrow">GLOSSARY</div><h2>Space words</h2></div>
+    <input id="glQ" class="gl-q" placeholder="Search a word…" aria-label="Search the glossary">
+    <div id="glOut" style="display:flex;flex-direction:column;gap:8px"></div>
+  </section>
+
+  <section class="page" id="pg-badges" aria-label="Badges">
+    <div class="pagehead"><div class="eyebrow">ACHIEVEMENTS</div><h2>Badges</h2></div>
+    <div class="bd-grid" id="bdOut"></div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="page" id="pg-about" aria-label="About">
+    <div class="card about-hero">
+      <svg viewBox="0 0 120 120" width="64" height="64" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="#07090C" stroke="#1F2730"/><ellipse cx="60" cy="60" rx="44" ry="17" fill="none" stroke="#D8B47A" stroke-width="2.4"/><circle cx="51" cy="50" r="17" fill="#C9CED6"/><circle cx="57" cy="47" r="14" fill="#07090C"/><circle cx="86" cy="70" r="7" fill="#E2713F"/></svg>
+      <div><div class="tb-brand" style="font-size:20px">ELSE<b>WHERE</b></div><p class="note">Made by <b>Apogeans: The Limit Breakers</b> for the NASA Space Apps Challenge.</p><p class="ver">Android app · version 2.1/p></div>
+    </div>
+    <div class="card pad">
+      <h3>HOW THE MATCH WORKS</h3>
+      <div class="steps">
+        <div><i>1</i><p><b>Profile.</b> Every Earth place gets a score on 16 terrain features, such as dryness, cold, ruggedness, ice, basalt and dunes.</p></div>
+        <div><i>2</i><p><b>Compare.</b> The profile is compared with 30 Moon and Mars sites: bases, past landings and proposed future landing zones.</p></div>
+        <div><i>3</i><p><b>Scan.</b> Each country is also scanned on a grid, so new candidate spots turn up even where no landform has a name.</p></div>
+      </div>
+    </div>
+    <details class="card pad more"><summary><h3 style="margin:0">FULL METHOD AND DATA</h3></summary>{{HINT}}</details>
+    <div class="card pad">
+      <h3>MAIN DATA SOURCES</h3>
+      <div class="chiprow">
+        <span class="fchip">NASA SRTM</span><span class="fchip">NASA POWER</span><span class="fchip">NASA GIBS</span><span class="fchip">Moon &amp; Mars Trek</span><span class="fchip">LOLA · Diviner · LROC</span><span class="fchip">MOLA · THEMIS · SWIM</span><span class="fchip">USGS geologic maps</span><span class="fchip">Natural Earth</span><span class="fchip">Köppen–Geiger</span><span class="fchip">Earth Impact Database</span><span class="fchip">IAU Gazetteer</span>
+      </div>
+      <p class="note" style="font-size:13px;margin-top:10px">Maps, list and scores work offline. NASA imagery and live climate need an internet connection.</p>
+    </div>
+  </section>
+</main>
+
+<div id="camView" hidden>
+  <video id="camVideo" playsinline muted autoplay></video>
+  <div class="cam-top"><span class="cam-tag">LIVE · PHOTO MATCH</span><button type="button" id="camClose" aria-label="Close camera">✕</button></div>
+  <div class="cam-reticle"></div>
+  <div class="cam-panel">
+    <div class="cam-hint" id="camHint">Point at bare ground, rocks or a desert</div>
+    <div class="cam-m"><span>Mars</span><div class="pm-bar"><i id="camMarsBar" style="width:0;background:#E2713F"></i></div><b><span id="camMars">0</span>%</b></div>
+    <div class="cam-m"><span>Moon</span><div class="pm-bar"><i id="camMoonBar" style="width:0;background:#C9CED6"></i></div><b><span id="camMoon">0</span>%</b></div>
+    <button type="button" id="camShot" aria-label="Take photo and rate it"><span></span></button>
+  </div>
+  <div id="camFlash"></div>
+</div>
+<nav class="tabbar" aria-label="Main">
+  <button type="button" class="tab" data-go="home"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z"/></svg><span>Home</span></button>
+  <button type="button" class="tab" data-go="earth"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg><span>Earth</span></button>
+  <button type="button" class="tab" data-go="explore"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5.5"/><ellipse cx="12" cy="12" rx="10.5" ry="3.6" transform="rotate(-20 12 12)"/></svg><span>Moon &amp; Mars</span></button>
+  <button type="button" class="tab" data-go="trivia"><svg viewBox="0 0 24 24"><path d="M9.2 9a3 3 0 1 1 4.3 2.7c-.9.5-1.5 1.2-1.5 2.3v.5M12 18v.3"/><circle cx="12" cy="12" r="9.5"/></svg><span>Trivia</span></button>
+  <button type="button" class="tab" data-go="news"><svg viewBox="0 0 24 24"><path d="M5 4h11v16H6a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1z"/><path d="M16 8h3a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2h-2M8 8h5M8 12h5M8 16h3"/></svg><span>News</span></button>
+</nav>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>

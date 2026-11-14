@@ -6,6 +6,13 @@ Elsewhere is a free Android app that finds the places on Earth that are most lik
 
 Made by **Apogeans: The Limit Breakers** for the NASA Space Apps Challenge 2026 (lunar base challenge).
 
+## ▶ Try the app
+
+- **In your browser (no install):** https://ashwinhit.github.io/elsewhere/
+  Works on a laptop or a phone. Tap **Present Elsewhere** on the home screen for a 90-second guided tour.
+- **On Android:** download [`release/Elsewhere-v2.1.apk`](release/Elsewhere-v2.1.apk) and open it.
+- **Offline:** download this repository and open `index.html` in any browser.
+
 ![Elsewhere screens](docs/screens.png)
 
 ## 🤖 How AI helped
@@ -17,7 +24,7 @@ We want to be clear about this. **AI (Anthropic's Claude) helped us analyze the 
 - build the similarity matching and the whole-surface scans of the Moon and Mars,
 - write and debug parts of the app's code.
 
-The same notice is written at the top of every code file, and right above the data inside `app/index.html`. The promotional films we made are AI-generated and labelled as such. The demo footage shows the real app.
+The same notice is written at the top of every code file, and right above the data inside `src/app/index.html`. The promotional films we made are AI-generated and labelled as such. The demo footage shows the real app.
 
 ## What the app does
 
@@ -47,10 +54,12 @@ Download [`release/Elsewhere-v2.1.apk`](release/Elsewhere-v2.1.apk) on an Androi
 ## Project layout
 
 ```
-app/index.html        the core app: map, matching, data (works on its own in a browser)
-shell/                the phone app layer: pages, navigation, trivia, tools, photo match, present mode
-shell/build_app.py    combines app/ + shell/ into one offline page for Android
-android/              the Android project (apktool format), assets/www holds the built page
+index.html            the complete app, ready to run (open it in a browser, or via GitHub Pages)
+*.jpg, *.mp4          images and films the app shows
+src/app/index.html    the core app source: map, matching and data
+src/shell/            the phone app layer: pages, navigation, trivia, tools, photo match, present mode
+src/shell/build_app.py  combines src/ into the single offline index.html
+android/              the Android project (apktool format)
 scripts/build_apk.sh  builds a signed APK
 vendor/               fonts (SIL OFL) and libraries (d3, topojson) bundled for offline use
 release/              ready-to-install APK
@@ -60,11 +69,9 @@ docs/                 screenshots
 ## Build it yourself
 
 ```bash
-python3 shell/build_app.py                          # just the web app -> android/assets/www/index.html
+python3 src/shell/build_app.py                      # rebuilds index.html and android/assets/www/index.html
 KEYSTORE=your.jks ./scripts/build_apk.sh            # full signed APK -> build/Elsewhere.apk
 ```
-
-You can also open `android/assets/www/index.html` straight in a browser.
 
 ## Team
 

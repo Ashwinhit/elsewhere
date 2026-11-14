@@ -9,9 +9,9 @@
 """Turn the Elsewhere web page into the paged Android app page: assets/www/index.html."""
 import base64, pathlib, re, sys
 
-R = pathlib.Path(__file__).resolve().parents[1]
-src = (R / 'app/index.html').read_text(encoding='utf-8')
-sh = R / 'shell'
+R = pathlib.Path(__file__).resolve().parents[2]
+src = (R / 'src/app/index.html').read_text(encoding='utf-8')
+sh = R / 'src/shell'
 
 def cut(start, end, s=None, inclusive_end=True):
     s = src if s is None else s
@@ -60,6 +60,8 @@ for tag, lib in (('<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/
 last = out.rindex('</script>')
 out = out[:last + 9] + '\n<script>\n' + (sh / 'shell.js').read_text(encoding='utf-8') + '\n</script>\n<script>\n' + (sh / 'features.js').read_text(encoding='utf-8') + '\n</script>\n<script>\n' + (sh / 'photo.js').read_text(encoding='utf-8') + '\n</script>\n<script>\n' + (sh / 'tools.js').read_text(encoding='utf-8') + '\n</script>\n<script>\n' + (sh / 'present.js').read_text(encoding='utf-8') + '\n</script>\n' + out[last + 9:]
 
+# one build, two homes: the Android app and the playable web app at the repo root
 dst = R / 'android/assets/www/index.html'
 dst.write_text(out, encoding='utf-8')
+(R / 'index.html').write_text(out, encoding='utf-8')
 print('ok', len(out))

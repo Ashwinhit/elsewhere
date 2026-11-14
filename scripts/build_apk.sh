@@ -10,7 +10,7 @@
 # Usage: KEYSTORE=my.jks KEY_ALIAS=elsewhere ./scripts/build_apk.sh
 set -euo pipefail
 cd "$(dirname "$0")/.."
-python3 shell/build_app.py                      # app/ + shell/ -> android/assets/www/index.html
+python3 src/shell/build_app.py                  # src/ -> index.html and android/assets/www/index.html
 mkdir -p build
 apktool b android -o build/unsigned.apk
 zipalign -f -p 4 build/unsigned.apk build/aligned.apk

@@ -31,7 +31,7 @@
       <button type="button" class="m3-act" data-go="near"><span class="m3-ai" style="--c:#7FC79A"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7.5"/></svg></span><span>Near me</span></button>
       <button type="button" class="m3-act" data-go="clock"><span class="m3-ai" style="--c:#B99CF0"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg></span><span>Space clock</span></button>
     </div>
-    <button type="button" class="m3-present" data-present="1"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span><b>Present Elsewhere</b><small>A 90-second guided tour of the app</small></span></button>
+    <button type="button" class="m3-present" data-present="1"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span><b>Present Elsewhere</b><small>A 95-second guided tour of the app</small></span></button>
     <div class="m3-sect"><h3>For you</h3></div>
     <div class="m3-carousel">
       <button type="button" class="nowcard" id="nowCard"></button>
@@ -133,6 +133,18 @@
     </div>
   </section>
 
+  <section class="page" id="pg-v3d" aria-label="3D view">
+    <div class="v3d-top"><div><small>Similarity</small><b id="v3dPct">–</b><span>to <i id="v3dPctB">Mars</i></span></div>
+      <div class="v3d-seg" role="group" aria-label="Which match"><button type="button" data-v3="cur" aria-pressed="true">This match</button><button type="button" data-v3="moon">Best Moon</button><button type="button" data-v3="mars">Best Mars</button></div></div>
+    <div class="v3d-wrap" id="v3dWrap">
+      <div class="v3d-pane"><canvas id="v3dA"></canvas><div class="v3d-lab"><span class="v3d-k" style="color:#7FB2D8">EARTH</span><b id="v3dAn"></b><small id="v3dAl"></small></div></div>
+      <div class="v3d-pane"><canvas id="v3dB"></canvas><div class="v3d-lab"><span class="v3d-k" id="v3dBk">MARS</span><b id="v3dBn"></b><small id="v3dBl"></small></div></div>
+      <div class="v3d-zoom"><button type="button" data-zoom="in" aria-label="Zoom in">+</button><button type="button" data-zoom="out" aria-label="Zoom out">−</button></div>
+      <div class="v3d-msg" id="v3dMsg" hidden></div>
+    </div>
+    <p class="note v3d-note">Drag to look around. Both views move together, so you see each place from the same angle. Pinch or use +/− to zoom.</p>
+  </section>
+
   <section class="page" id="pg-films" aria-label="Films">
     <div class="pagehead"><div class="eyebrow">FILMS</div><h2>Elsewhere on screen</h2><p class="note">AI-generated animations. Tap play; turn the sound up.</p></div>
     <figure class="film"><video controls playsinline preload="none" poster="film_problem.jpg" src="film_problem.mp4"></video><figcaption><b>The problem</b><small>45 s · Why training on the right ground matters</small></figcaption></figure>
@@ -188,7 +200,7 @@
   <section class="page" id="pg-about" aria-label="About">
     <div class="card about-hero">
       <svg viewBox="0 0 120 120" width="64" height="64" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="#07090C" stroke="#1F2730"/><ellipse cx="60" cy="60" rx="44" ry="17" fill="none" stroke="#D8B47A" stroke-width="2.4"/><circle cx="51" cy="50" r="17" fill="#C9CED6"/><circle cx="57" cy="47" r="14" fill="#07090C"/><circle cx="86" cy="70" r="7" fill="#E2713F"/></svg>
-      <div><div class="tb-brand" style="font-size:20px">ELSE<b>WHERE</b></div><p class="note">Made by <b>Apogeans: The Limit Breakers</b> for the NASA Space Apps Challenge.</p><p class="ver">Android app · version 2.1/p></div>
+      <div><div class="tb-brand" style="font-size:20px">ELSE<b>WHERE</b></div><p class="note">Made by <b>Apogeans: The Limit Breakers</b> for the NASA Space Apps Challenge.</p><p class="ver">Android app · version 2.2/p></div>
     </div>
     <div class="card pad">
       <h3>HOW THE MATCH WORKS</h3>
@@ -221,6 +233,7 @@
   </div>
   <div id="camFlash"></div>
 </div>
+<button type="button" class="fab3d" data-go="v3d" aria-label="View in 3D"><svg viewBox="0 0 24 24"><path d="M12 2.8 20 7.4v9.2L12 21.2 4 16.6V7.4z"/><path d="M4 7.4 12 12l8-4.6M12 12v9.2"/></svg><span>3D view</span></button>
 <nav class="tabbar" aria-label="Main">
   <button type="button" class="tab" data-go="home"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z"/></svg><span>Home</span></button>
   <button type="button" class="tab" data-go="earth"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg><span>Earth</span></button>

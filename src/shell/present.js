@@ -22,6 +22,7 @@
     { go: async () => { const li = $('#sites li.site'); if (li) li.click(); await wait(500); if (!document.body.dataset.page.startsWith('site')) window.appGo('site'); }, page: 'site', el: '#dossier .hero', scroll: 'top', t: 'Each site is matched to a real Moon or Mars site, on 16 terrain features.' },
     { go: async () => { $('.m3-tabs [data-tab="matches"]')?.click(); }, page: 'site', el: '.m3-tabs', t: 'Its best matches on the Moon and Mars, and similar spots found by scanning their surfaces.', scroll: 'top' },
     { go: async () => { $('.m3-tabs [data-tab="data"]')?.click(); }, page: 'site', el: '.m3-tabs', t: 'Every match shows the open data behind it.', scroll: 'top' },
+    { page: 'v3d', go: async () => { await wait(2200); }, el: '#v3dWrap', t: 'See the Earth site and its Mars or Moon match in 3D, side by side.', scroll: 'top' },
     { page: 'check', el: '#pg-check form, #pg-check .card', t: 'Check any spot on Earth: your location, coordinates or a map link.' },
     { page: 'explore', el: '#explore', t: 'Scan all 20,736 squares of the Moon or Mars against one Earth site.' },
     { page: 'photo', el: '.ph-cam', t: 'Point the camera at a landscape for a live Moon and Mars score.' },

@@ -733,3 +733,31 @@ body:not([data-page="home"]) #tbPresent { display: none; }
 .pr-end small { color: var(--muted); font-size: 14px; }
 .pr-team { margin-top: 20px; color: var(--accent); font: 500 13px var(--display); letter-spacing: 1px; }
 body.presenting .tabbar, body.presenting .topbar { pointer-events: none; }
+
+/* ---- 3D view ---- */
+.fab3d { position: fixed; right: 16px; bottom: calc(96px + env(safe-area-inset-bottom)); z-index: 40; display: none; align-items: center; gap: 10px; height: 56px; padding: 0 20px 0 16px; border: 0; border-radius: 16px; background: var(--accent); color: var(--on-accent); font: 500 15px var(--display); box-shadow: 0 6px 18px rgba(0, 0, 0, .45); }
+.fab3d svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
+body[data-page="site"] .fab3d { display: inline-flex; }
+body.presenting .fab3d { pointer-events: none; }
+#pg-v3d { gap: 10px; }
+.v3d-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.v3d-top > div:first-child { display: flex; align-items: baseline; gap: 8px; }
+.v3d-top small { color: var(--muted); font-size: 13px; }
+.v3d-top b { font: 400 30px var(--display); color: var(--accent); }
+.v3d-top span { color: var(--muted); font-size: 14px; }
+.v3d-top i { font-style: normal; }
+.v3d-seg { display: flex; border: 1px solid #44474F; border-radius: 20px; overflow: hidden; }
+.v3d-seg button { border: 0; background: none; color: var(--muted); font: 500 13px var(--display); padding: 8px 12px; }
+.v3d-seg button + button { border-left: 1px solid #44474F; }
+.v3d-seg button[aria-pressed="true"] { background: var(--tonal); color: #FFE7A6; }
+.v3d-wrap { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; height: calc(100vh - 64px - 96px - 150px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); min-height: 380px; touch-action: none; user-select: none; }
+.v3d-pane { position: relative; border-radius: var(--r); overflow: hidden; background: #020306; }
+.v3d-pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.v3d-lab { position: absolute; left: 0; right: 0; bottom: 0; padding: 30px 12px 12px; background: linear-gradient(to top, rgba(0, 0, 0, .85), transparent); pointer-events: none; display: flex; flex-direction: column; gap: 2px; }
+.v3d-k { font: 600 11px var(--display); letter-spacing: 1.2px; color: #E2713F; }
+.v3d-lab b { font: 500 15px/1.25 var(--display); color: #fff; }
+.v3d-lab small { font: 400 11px var(--display); color: rgba(255, 255, 255, .65); }
+.v3d-zoom { position: absolute; left: 50%; top: 10px; transform: translateX(-50%); display: flex; flex-direction: column; gap: 6px; z-index: 2; }
+.v3d-zoom button { width: 40px; height: 40px; border-radius: 50%; border: 0; background: rgba(28, 31, 37, .85); color: #fff; font: 400 22px var(--display); }
+.v3d-msg { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 15px; background: rgba(2, 3, 6, .6); border-radius: var(--r); }
+.v3d-note { color: var(--muted); font-size: 13px; margin: 0; }

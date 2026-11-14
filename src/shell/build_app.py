@@ -58,7 +58,16 @@ for tag, lib in (('<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/
 
 # shell script after the app script
 last = out.rindex('</script>')
-out = out[:last + 9] + '\n<script>\n' + (sh / 'shell.js').read_text(encoding='utf-8') + '\n</script>\n<script>\n' + (sh / 'features.js').read_text(encoding='utf-8') + '\n</script>\n<script>\n' + (sh / 'photo.js').read_text(encoding='utf-8') + '\n</script>\n<script>\n' + (sh / 'tools.js').read_text(encoding='utf-8') + '\n</script>\n<script>\n' + (sh / 'present.js').read_text(encoding='utf-8') + '\n</script>\n' + out[last + 9:]
+out = out[:last + 9] + '\n<script>\n' + (sh / 'shell.js').read_text(encoding='utf-8') + '\n</script>\n<script>\n' + (sh / 'features.js').read_text(encoding='utf-8') + '\n</script>\n<script>\n' + (sh / 'photo.js').read_text(encoding='utf-8') + '\n</script>\n<script>\n' + (sh / 'tools.js').read_text(encoding='utf-8') + '\n</script>\n<script>\n' + (sh / 'present.js').read_text(encoding='utf-8') + '\n</script>\n<script>\n' + (sh / 'view3d.js').read_text(encoding='utf-8') + '\n</script>\n' + out[last + 9:]
+
+# 3D view library: three.js + globe textures, loaded only when the 3D screen opens
+tex = {}
+for k in ['earth', 'mars', 'moon', 'earth_bump', 'mars_bump', 'moon_bump']:
+    tex[k] = 'data:image/jpeg;base64,' + base64.b64encode((R / f'vendor/textures/{k}.jpg').read_bytes()).decode()
+import json as _json
+v3d = (R / 'vendor/libs/three-r128/three.min.js').read_text(encoding='utf-8') + '\nwindow.V3D_TEX=' + _json.dumps(tex) + ';\n'
+(R / 'android/assets/www/v3d.js').write_text(v3d, encoding='utf-8')
+(R / 'v3d.js').write_text(v3d, encoding='utf-8')
 
 # one build, two homes: the Android app and the playable web app at the repo root
 dst = R / 'android/assets/www/index.html'

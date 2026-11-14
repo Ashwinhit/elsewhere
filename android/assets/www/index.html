@@ -933,6 +933,34 @@ body:not([data-page="home"]) #tbPresent { display: none; }
 .pr-team { margin-top: 20px; color: var(--accent); font: 500 13px var(--display); letter-spacing: 1px; }
 body.presenting .tabbar, body.presenting .topbar { pointer-events: none; }
 
+/* ---- 3D view ---- */
+.fab3d { position: fixed; right: 16px; bottom: calc(96px + env(safe-area-inset-bottom)); z-index: 40; display: none; align-items: center; gap: 10px; height: 56px; padding: 0 20px 0 16px; border: 0; border-radius: 16px; background: var(--accent); color: var(--on-accent); font: 500 15px var(--display); box-shadow: 0 6px 18px rgba(0, 0, 0, .45); }
+.fab3d svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
+body[data-page="site"] .fab3d { display: inline-flex; }
+body.presenting .fab3d { pointer-events: none; }
+#pg-v3d { gap: 10px; }
+.v3d-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.v3d-top > div:first-child { display: flex; align-items: baseline; gap: 8px; }
+.v3d-top small { color: var(--muted); font-size: 13px; }
+.v3d-top b { font: 400 30px var(--display); color: var(--accent); }
+.v3d-top span { color: var(--muted); font-size: 14px; }
+.v3d-top i { font-style: normal; }
+.v3d-seg { display: flex; border: 1px solid #44474F; border-radius: 20px; overflow: hidden; }
+.v3d-seg button { border: 0; background: none; color: var(--muted); font: 500 13px var(--display); padding: 8px 12px; }
+.v3d-seg button + button { border-left: 1px solid #44474F; }
+.v3d-seg button[aria-pressed="true"] { background: var(--tonal); color: #FFE7A6; }
+.v3d-wrap { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; height: calc(100vh - 64px - 96px - 150px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); min-height: 380px; touch-action: none; user-select: none; }
+.v3d-pane { position: relative; border-radius: var(--r); overflow: hidden; background: #020306; }
+.v3d-pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.v3d-lab { position: absolute; left: 0; right: 0; bottom: 0; padding: 30px 12px 12px; background: linear-gradient(to top, rgba(0, 0, 0, .85), transparent); pointer-events: none; display: flex; flex-direction: column; gap: 2px; }
+.v3d-k { font: 600 11px var(--display); letter-spacing: 1.2px; color: #E2713F; }
+.v3d-lab b { font: 500 15px/1.25 var(--display); color: #fff; }
+.v3d-lab small { font: 400 11px var(--display); color: rgba(255, 255, 255, .65); }
+.v3d-zoom { position: absolute; left: 50%; top: 10px; transform: translateX(-50%); display: flex; flex-direction: column; gap: 6px; z-index: 2; }
+.v3d-zoom button { width: 40px; height: 40px; border-radius: 50%; border: 0; background: rgba(28, 31, 37, .85); color: #fff; font: 400 22px var(--display); }
+.v3d-msg { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 15px; background: rgba(2, 3, 6, .6); border-radius: var(--r); }
+.v3d-note { color: var(--muted); font-size: 13px; margin: 0; }
+
 </style>
 
 <!--
@@ -968,7 +996,7 @@ body.presenting .tabbar, body.presenting .topbar { pointer-events: none; }
       <button type="button" class="m3-act" data-go="near"><span class="m3-ai" style="--c:#7FC79A"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7.5"/></svg></span><span>Near me</span></button>
       <button type="button" class="m3-act" data-go="clock"><span class="m3-ai" style="--c:#B99CF0"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg></span><span>Space clock</span></button>
     </div>
-    <button type="button" class="m3-present" data-present="1"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span><b>Present Elsewhere</b><small>A 90-second guided tour of the app</small></span></button>
+    <button type="button" class="m3-present" data-present="1"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span><b>Present Elsewhere</b><small>A 95-second guided tour of the app</small></span></button>
     <div class="m3-sect"><h3>For you</h3></div>
     <div class="m3-carousel">
       <button type="button" class="nowcard" id="nowCard"></button>
@@ -1122,6 +1150,18 @@ body.presenting .tabbar, body.presenting .topbar { pointer-events: none; }
     </div>
   </section>
 
+  <section class="page" id="pg-v3d" aria-label="3D view">
+    <div class="v3d-top"><div><small>Similarity</small><b id="v3dPct">–</b><span>to <i id="v3dPctB">Mars</i></span></div>
+      <div class="v3d-seg" role="group" aria-label="Which match"><button type="button" data-v3="cur" aria-pressed="true">This match</button><button type="button" data-v3="moon">Best Moon</button><button type="button" data-v3="mars">Best Mars</button></div></div>
+    <div class="v3d-wrap" id="v3dWrap">
+      <div class="v3d-pane"><canvas id="v3dA"></canvas><div class="v3d-lab"><span class="v3d-k" style="color:#7FB2D8">EARTH</span><b id="v3dAn"></b><small id="v3dAl"></small></div></div>
+      <div class="v3d-pane"><canvas id="v3dB"></canvas><div class="v3d-lab"><span class="v3d-k" id="v3dBk">MARS</span><b id="v3dBn"></b><small id="v3dBl"></small></div></div>
+      <div class="v3d-zoom"><button type="button" data-zoom="in" aria-label="Zoom in">+</button><button type="button" data-zoom="out" aria-label="Zoom out">−</button></div>
+      <div class="v3d-msg" id="v3dMsg" hidden></div>
+    </div>
+    <p class="note v3d-note">Drag to look around. Both views move together, so you see each place from the same angle. Pinch or use +/− to zoom.</p>
+  </section>
+
   <section class="page" id="pg-films" aria-label="Films">
     <div class="pagehead"><div class="eyebrow">FILMS</div><h2>Elsewhere on screen</h2><p class="note">AI-generated animations. Tap play; turn the sound up.</p></div>
     <figure class="film"><video controls playsinline preload="none" poster="film_problem.jpg" src="film_problem.mp4"></video><figcaption><b>The problem</b><small>45 s · Why training on the right ground matters</small></figcaption></figure>
@@ -1177,7 +1217,7 @@ body.presenting .tabbar, body.presenting .topbar { pointer-events: none; }
   <section class="page" id="pg-about" aria-label="About">
     <div class="card about-hero">
       <svg viewBox="0 0 120 120" width="64" height="64" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="#07090C" stroke="#1F2730"/><ellipse cx="60" cy="60" rx="44" ry="17" fill="none" stroke="#D8B47A" stroke-width="2.4"/><circle cx="51" cy="50" r="17" fill="#C9CED6"/><circle cx="57" cy="47" r="14" fill="#07090C"/><circle cx="86" cy="70" r="7" fill="#E2713F"/></svg>
-      <div><div class="tb-brand" style="font-size:20px">ELSE<b>WHERE</b></div><p class="note">Made by <b>Apogeans: The Limit Breakers</b> for the NASA Space Apps Challenge.</p><p class="ver">Android app · version 2.1/p></div>
+      <div><div class="tb-brand" style="font-size:20px">ELSE<b>WHERE</b></div><p class="note">Made by <b>Apogeans: The Limit Breakers</b> for the NASA Space Apps Challenge.</p><p class="ver">Android app · version 2.2/p></div>
     </div>
     <div class="card pad">
       <h3>HOW THE MATCH WORKS</h3>
@@ -1210,6 +1250,7 @@ body.presenting .tabbar, body.presenting .topbar { pointer-events: none; }
   </div>
   <div id="camFlash"></div>
 </div>
+<button type="button" class="fab3d" data-go="v3d" aria-label="View in 3D"><svg viewBox="0 0 24 24"><path d="M12 2.8 20 7.4v9.2L12 21.2 4 16.6V7.4z"/><path d="M4 7.4 12 12l8-4.6M12 12v9.2"/></svg><span>3D view</span></button>
 <nav class="tabbar" aria-label="Main">
   <button type="button" class="tab" data-go="home"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z"/></svg><span>Home</span></button>
   <button type="button" class="tab" data-go="earth"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg><span>Earth</span></button>
@@ -1853,7 +1894,7 @@ const EG = {"meta": {"step": 0.25, "nr": 720, "nc": 1440, "planes": 20, "keys": 
     if (state.site) selectSite(rows.some((r) => r.s === state.site) ? state.site : rows[0].s);
   }));
 
-  window.AF = { S, T, F, PL, state, ex, score, selectCountry, selectSite, checkPoint, checkText, pInfo, pScores, pTop, fmtLL, renderExplore, renderDossier, COLOR, KLBL };
+  window.AF = { S, T, F, PL, TLL, state, ex, score, selectCountry, selectSite, checkPoint, checkText, pInfo, pScores, pTop, fmtLL, renderExplore, renderDossier, COLOR, KLBL };
   selectCountry('Oman');
 })();
 </script>
@@ -1870,9 +1911,9 @@ const EG = {"meta": {"step": 0.25, "nr": 720, "nc": 1440, "planes": 20, "keys": 
 
 (function () {
   const AF = window.AF, $ = (s) => document.querySelector(s);
-  const TITLES = { home: '', earth: 'Earth analogs', site: 'Site', check: 'Check a place', explore: 'Moon & Mars', trivia: 'Space trivia', news: 'Space news', photo: 'Photo match', about: 'About', more: 'More', saved: 'Saved sites', near: 'Near me', compare: 'Compare', clock: 'Space clock', weight: 'Your weight', timeline: 'Landings', glossary: 'Glossary', badges: 'Badges' };
-  const PAGES = ['home', 'earth', 'site', 'check', 'explore', 'trivia', 'news', 'photo', 'about', 'more', 'saved', 'near', 'compare', 'clock', 'weight', 'timeline', 'glossary', 'badges', 'films'];
-  const SUB = ['site', 'check', 'about', 'photo', 'more', 'saved', 'near', 'compare', 'clock', 'weight', 'timeline', 'glossary', 'badges', 'films'];
+  const TITLES = { home: '', earth: 'Earth analogs', site: 'Site', check: 'Check a place', explore: 'Moon & Mars', trivia: 'Space trivia', news: 'Space news', photo: 'Photo match', about: 'About', more: 'More', saved: 'Saved sites', near: 'Near me', compare: 'Compare', clock: 'Space clock', weight: 'Your weight', timeline: 'Landings', glossary: 'Glossary', badges: 'Badges', films: 'Films', v3d: '3D view' };
+  const PAGES = ['home', 'earth', 'site', 'check', 'explore', 'trivia', 'news', 'photo', 'about', 'more', 'saved', 'near', 'compare', 'clock', 'weight', 'timeline', 'glossary', 'badges', 'films', 'v3d'];
+  const SUB = ['site', 'check', 'about', 'photo', 'more', 'saved', 'near', 'compare', 'clock', 'weight', 'timeline', 'glossary', 'badges', 'films', 'v3d'];
   const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const short = (n) => String(n).split(' (')[0];
   let cur = null;
@@ -2906,6 +2947,7 @@ document.addEventListener('elsewhere:page', () => { document.querySelectorAll('#
     { go: async () => { const li = $('#sites li.site'); if (li) li.click(); await wait(500); if (!document.body.dataset.page.startsWith('site')) window.appGo('site'); }, page: 'site', el: '#dossier .hero', scroll: 'top', t: 'Each site is matched to a real Moon or Mars site, on 16 terrain features.' },
     { go: async () => { $('.m3-tabs [data-tab="matches"]')?.click(); }, page: 'site', el: '.m3-tabs', t: 'Its best matches on the Moon and Mars, and similar spots found by scanning their surfaces.', scroll: 'top' },
     { go: async () => { $('.m3-tabs [data-tab="data"]')?.click(); }, page: 'site', el: '.m3-tabs', t: 'Every match shows the open data behind it.', scroll: 'top' },
+    { page: 'v3d', go: async () => { await wait(2200); }, el: '#v3dWrap', t: 'See the Earth site and its Mars or Moon match in 3D, side by side.', scroll: 'top' },
     { page: 'check', el: '#pg-check form, #pg-check .card', t: 'Check any spot on Earth: your location, coordinates or a map link.' },
     { page: 'explore', el: '#explore', t: 'Scan all 20,736 squares of the Moon or Mars against one Earth site.' },
     { page: 'photo', el: '.ph-cam', t: 'Point the camera at a landscape for a live Moon and Mars score.' },
@@ -2997,6 +3039,148 @@ document.addEventListener('elsewhere:page', () => { document.querySelectorAll('#
   window.addEventListener('popstate', () => { if (on) setTimeout(() => place(document.querySelector(STEPS[i].el || 'x')), 400); });
   window.addEventListener('resize', () => { if (on && !STEPS[i].end) place(document.querySelector(STEPS[i].el)); });
   document.addEventListener('click', (e) => { if (e.target.closest('[data-present]')) { e.preventDefault(); start(); } });
+})();
+
+</script>
+<script>
+/*
+ * Elsewhere · Apogeans: The Limit Breakers · NASA Space Apps Challenge 2026
+ *
+ * AI ASSISTANCE NOTICE
+ * AI (Anthropic's Claude) helped us analyze the immense amount of data behind this
+ * app: elevation, climate, geology and surface datasets for Earth, the Moon and
+ * Mars, and turning it into the 16 feature scores and similarity matches the app
+ * uses. AI also helped write and debug parts of this code. See README.md.
+ */
+
+// ---------- 3D view: the Earth site and its Moon/Mars match, side by side ----------
+// Globes use NASA Blue Marble (Earth), MOLA-based relief (Mars) and LRO-based maps (Moon).
+// three.js and the textures load only when this screen is first opened (v3d.js).
+(function () {
+  const $ = (s) => document.querySelector(s);
+  const page = document.getElementById('pg-v3d'); if (!page) return;
+  let loading = null, views = [], raf = 0, last = 0, choice = 'cur', sync = true, idle = 0;
+  const cam = { az: 0.6, el: 0.55, dist: 1.25 };
+
+  function load() {
+    if (window.THREE && window.V3D_TEX) return Promise.resolve();
+    if (!loading) loading = new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'v3d.js'; s.onload = res; s.onerror = () => { loading = null; rej(); }; document.head.appendChild(s); });
+    return loading;
+  }
+  // equirectangular (lon -180..180) onto three.js SphereGeometry UVs
+  const ll2v = (lat, lon, r) => { const u = (lon + 180) / 360 * Math.PI * 2, la = lat * Math.PI / 180; return new THREE.Vector3(-Math.cos(u) * Math.cos(la) * r, Math.sin(la) * r, Math.sin(u) * Math.cos(la) * r); };
+
+  function makeView(canvas, body) {
+    const T = THREE, tex = window.V3D_TEX, L = new T.TextureLoader();
+    const renderer = new T.WebGLRenderer({ canvas, antialias: true, alpha: false });
+    renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+    const scene = new T.Scene(); scene.background = new T.Color(0x020306);
+    const camera = new T.PerspectiveCamera(42, 1, 0.001, 200);
+    const key = body.toLowerCase();
+    const map = L.load(tex[key]); const bump = L.load(tex[key + '_bump']);
+    [map, bump].forEach((t) => { t.anisotropy = renderer.capabilities.getMaxAnisotropy(); });
+    const mat = new T.MeshPhongMaterial({ map, bumpMap: bump, bumpScale: body === 'Earth' ? 0.018 : body === 'Mars' ? 0.035 : 0.03, specular: new T.Color(body === 'Earth' ? 0x223344 : 0x0a0a0a), shininess: body === 'Earth' ? 14 : 4 });
+    const globe = new T.Mesh(new T.SphereGeometry(1, 160, 120), mat); scene.add(globe);
+    // thin atmosphere rim for Earth and Mars
+    if (body !== 'Moon') {
+      const c = body === 'Earth' ? new T.Color(0.35, 0.6, 1.0) : new T.Color(0.95, 0.6, 0.4);
+      const atm = new T.Mesh(new T.SphereGeometry(body === 'Earth' ? 1.03 : 1.015, 96, 64), new T.ShaderMaterial({
+        uniforms: { c: { value: c }, k: { value: body === 'Earth' ? 1.0 : 0.6 } }, side: T.BackSide, transparent: true, depthWrite: false, blending: T.AdditiveBlending,
+        vertexShader: 'varying vec3 vN; varying vec3 vP; void main(){ vN = normalize(normalMatrix*normal); vec4 mv = modelViewMatrix*vec4(position,1.0); vP = mv.xyz; gl_Position = projectionMatrix*mv; }',
+        fragmentShader: 'uniform vec3 c; uniform float k; varying vec3 vN; varying vec3 vP; void main(){ float r = pow(1.0 - abs(dot(normalize(-vP), vN)), 3.0); gl_FragColor = vec4(c, r * 0.9 * k); }' }));
+      scene.add(atm);
+    }
+    // stars
+    const sg = new T.BufferGeometry(), sp = [];
+    for (let i = 0; i < 1500; i++) { const v = new T.Vector3(Math.random() - .5, Math.random() - .5, Math.random() - .5).normalize().multiplyScalar(60 + Math.random() * 30); sp.push(v.x, v.y, v.z); }
+    sg.setAttribute('position', new T.Float32BufferAttribute(sp, 3));
+    scene.add(new T.Points(sg, new T.PointsMaterial({ color: 0xffffff, size: 0.12, sizeAttenuation: true, transparent: true, opacity: 0.7 })));
+    scene.add(new T.AmbientLight(0x3a4050, body === 'Moon' ? 0.35 : 0.45));
+    const sun = new T.DirectionalLight(0xfff4e6, 1.35); scene.add(sun); scene.add(sun.target);
+    // pin: stem, head and a pulsing ring on the surface
+    const pin = new T.Group();
+    const yel = new T.Color(0xFFC93C);
+    const stem = new T.Mesh(new T.CylinderGeometry(0.0012, 0.0012, 0.05, 8), new T.MeshBasicMaterial({ color: yel })); stem.position.y = 0.025; pin.add(stem);
+    const head = new T.Mesh(new T.SphereGeometry(0.0055, 16, 12), new T.MeshBasicMaterial({ color: yel })); head.position.y = 0.05; pin.add(head);
+    const ring = new T.Mesh(new T.RingGeometry(0.007, 0.0095, 48), new T.MeshBasicMaterial({ color: yel, transparent: true, side: T.DoubleSide, depthWrite: false }));
+    ring.rotation.x = -Math.PI / 2; ring.position.y = 0.001; pin.add(ring);
+    scene.add(pin);
+    const v = { renderer, scene, camera, pin, ring, sun, body, p: new T.Vector3(0, 0, 1), n: new T.Vector3(0, 0, 1), e: new T.Vector3(1, 0, 0), no: new T.Vector3(0, 1, 0) };
+    v.setSite = (lat, lon) => {
+      v.p = ll2v(lat, lon, 1.0); v.n = v.p.clone().normalize();
+      const up = Math.abs(v.n.y) > 0.98 ? new T.Vector3(1, 0, 0) : new T.Vector3(0, 1, 0);
+      v.e = new T.Vector3().crossVectors(up, v.n).normalize(); v.no = new T.Vector3().crossVectors(v.n, v.e).normalize();
+      pin.position.copy(v.p); pin.quaternion.setFromUnitVectors(new T.Vector3(0, 1, 0), v.n);
+      // low, raking sunlight from the west-north-west so relief reads clearly
+      sun.position.copy(v.p).add(v.n.clone().multiplyScalar(0.9)).add(v.e.clone().multiplyScalar(-1.6)).add(v.no.clone().multiplyScalar(0.6));
+      sun.target.position.copy(v.p);
+    };
+    v.frame = (c, t) => {
+      const d = c.dist, el = c.el, az = c.az;
+      const hor = v.no.clone().multiplyScalar(-Math.cos(az)).add(v.e.clone().multiplyScalar(-Math.sin(az)));
+      const pos = v.p.clone().add(v.n.clone().multiplyScalar(Math.sin(el) * d)).add(hor.multiplyScalar(Math.cos(el) * d));
+      camera.position.copy(pos); camera.up.copy(v.n); camera.lookAt(v.p.clone().add(v.n.clone().multiplyScalar(0.02)));
+      const k = (t % 2000) / 2000; ring.scale.setScalar(1 + k * 2.2); ring.material.opacity = 1 - k;
+      const sc = Math.max(0.3, d / 0.9); pin.scale.setScalar(sc);
+      renderer.render(scene, camera);
+    };
+    v.resize = () => { const w = canvas.clientWidth, h = canvas.clientHeight; if (!w || !h) return; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); };
+    return v;
+  }
+
+  const fmt = (lat, lon) => `${Math.abs(lat).toFixed(2)}°${lat >= 0 ? 'N' : 'S'}, ${Math.abs(lon).toFixed(2)}°${lon >= 0 ? 'E' : 'W'}`;
+  function pick() {
+    const s = AF.state.site; if (!s) return null;
+    let m = choice === 'moon' ? s.scores.find((x) => x.t.body === 'Moon') : choice === 'mars' ? s.scores.find((x) => x.t.body === 'Mars') : (s.scores.find((x) => x.t === AF.state.target) || s.best);
+    return { s, m };
+  }
+  async function open() {
+    const r = pick(); const msg = $('#v3dMsg');
+    if (!r) { msg.hidden = false; msg.textContent = 'Open a site first, then tap 3D view.'; return; }
+    msg.hidden = false; msg.textContent = 'Loading 3D…';
+    try { await load(); } catch (e) { msg.textContent = 'Could not load the 3D view.'; return; }
+    msg.hidden = true;
+    if (!views.length) {
+      views = [makeView($('#v3dA'), 'Earth'), null];
+      bind($('#v3dWrap'));
+    }
+    const { s, m } = r, ll = AF.TLL[m.t.id] || [0, 0];
+    if (!views[1] || views[1].body !== m.t.body) { if (views[1]) views[1].renderer.dispose(); const old = $('#v3dB'); const c = old.cloneNode(); old.replaceWith(c); views[1] = makeView(c, m.t.body); }
+    views[0].setSite(s.lat, s.lon); views[1].setSite(ll[0], ll[1]);
+    $('#v3dAn').textContent = String(s.name).split(' (')[0]; $('#v3dAl').textContent = `${s.country} · ${fmt(s.lat, s.lon)}`;
+    $('#v3dBk').textContent = m.t.body.toUpperCase(); $('#v3dBk').style.color = m.t.body === 'Mars' ? '#E2713F' : '#C9CED6';
+    $('#v3dBn').textContent = m.t.name; $('#v3dBl').textContent = `${m.t.where} · ${fmt(ll[0], ll[1])}`;
+    $('#v3dPct').textContent = m.p + '%'; $('#v3dPctB').textContent = m.t.body;
+    page.querySelectorAll('[data-v3]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.v3 === choice));
+    views.forEach((v) => v.resize());
+    cam.az = 0.6; cam.el = 0.55; cam.dist = 1.25;
+    if (!raf) { last = performance.now(); raf = requestAnimationFrame(loop); }
+  }
+  function loop(t) {
+    const dt = Math.min(0.05, (t - last) / 1000); last = t;
+    if (t > idle) cam.az += dt * 0.12;
+    views.forEach((v) => v && v.frame(cam, t));
+    raf = document.body.dataset.page === 'v3d' ? requestAnimationFrame(loop) : 0;
+  }
+  function bind(el) {
+    let p = null, pinch = null; const pts = new Map();
+    el.addEventListener('pointerdown', (e) => { pts.set(e.pointerId, e); el.setPointerCapture(e.pointerId); p = { x: e.clientX, y: e.clientY }; idle = performance.now() + 4000; });
+    el.addEventListener('pointermove', (e) => {
+      if (!pts.has(e.pointerId)) return; pts.set(e.pointerId, e);
+      if (pts.size === 2) { const [a, b] = [...pts.values()]; const d = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY); if (pinch) cam.dist = Math.min(3.2, Math.max(0.12, cam.dist * pinch / d)); pinch = d; return; }
+      if (!p) return; cam.az -= (e.clientX - p.x) * 0.006; cam.el = Math.min(1.45, Math.max(0.12, cam.el + (e.clientY - p.y) * 0.004)); p = { x: e.clientX, y: e.clientY }; idle = performance.now() + 4000;
+    });
+    const up = (e) => { pts.delete(e.pointerId); if (pts.size < 2) pinch = null; if (!pts.size) p = null; };
+    el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+    el.addEventListener('wheel', (e) => { e.preventDefault(); cam.dist = Math.min(3.2, Math.max(0.12, cam.dist * (1 + e.deltaY * 0.001))); idle = performance.now() + 4000; }, { passive: false });
+  }
+  page.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-v3]'); if (b) { choice = b.dataset.v3; open(); }
+    const z = e.target.closest('[data-zoom]'); if (z) { cam.dist = Math.min(3.2, Math.max(0.12, cam.dist * (z.dataset.zoom === 'in' ? 0.7 : 1.4))); idle = performance.now() + 3000; }
+  });
+  window.addEventListener('resize', () => views.forEach((v) => v && v.resize()));
+  window.addEventListener('elsewhere:page', (e) => { if (e.detail === 'v3d') { choice = 'cur'; requestAnimationFrame(open); } });
+  window.appOpen3D = open;
 })();
 
 </script>

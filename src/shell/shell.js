@@ -10,9 +10,9 @@
 
 (function () {
   const AF = window.AF, $ = (s) => document.querySelector(s);
-  const TITLES = { home: '', earth: 'Earth analogs', site: 'Site', check: 'Check a place', explore: 'Moon & Mars', trivia: 'Space trivia', news: 'Space news', photo: 'Photo match', about: 'About', more: 'More', saved: 'Saved sites', near: 'Near me', compare: 'Compare', clock: 'Space clock', weight: 'Your weight', timeline: 'Landings', glossary: 'Glossary', badges: 'Badges' };
-  const PAGES = ['home', 'earth', 'site', 'check', 'explore', 'trivia', 'news', 'photo', 'about', 'more', 'saved', 'near', 'compare', 'clock', 'weight', 'timeline', 'glossary', 'badges', 'films'];
-  const SUB = ['site', 'check', 'about', 'photo', 'more', 'saved', 'near', 'compare', 'clock', 'weight', 'timeline', 'glossary', 'badges', 'films'];
+  const TITLES = { home: '', earth: 'Earth analogs', site: 'Site', check: 'Check a place', explore: 'Moon & Mars', trivia: 'Space trivia', news: 'Space news', photo: 'Photo match', about: 'About', more: 'More', saved: 'Saved sites', near: 'Near me', compare: 'Compare', clock: 'Space clock', weight: 'Your weight', timeline: 'Landings', glossary: 'Glossary', badges: 'Badges', films: 'Films', v3d: '3D view' };
+  const PAGES = ['home', 'earth', 'site', 'check', 'explore', 'trivia', 'news', 'photo', 'about', 'more', 'saved', 'near', 'compare', 'clock', 'weight', 'timeline', 'glossary', 'badges', 'films', 'v3d'];
+  const SUB = ['site', 'check', 'about', 'photo', 'more', 'saved', 'near', 'compare', 'clock', 'weight', 'timeline', 'glossary', 'badges', 'films', 'v3d'];
   const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const short = (n) => String(n).split(' (')[0];
   let cur = null;

@@ -15,6 +15,8 @@ Made by **Apogeans: The Limit Breakers** for the NASA Space Apps Challenge 2026 
 
 ![Elsewhere screens](docs/screens.png)
 
+![3D view: Oman's Samail Ophiolite next to Valles Marineris on Mars and its best Moon match](docs/3d-view.png)
+
 ## 🤖 How AI helped
 
 We want to be clear about this. **AI (Anthropic's Claude) helped us analyze the immense amount of data behind Elsewhere.** The app compares Earth, the Moon and Mars using elevation, climate, geology and surface data from many large public datasets. Going through all of that by hand was not possible in a hackathon, so we used AI to help us:
